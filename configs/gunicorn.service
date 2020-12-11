@@ -1,0 +1,19 @@
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=username
+Group=www-data
+WorkingDirectory=/path/to/project
+ExecStart=/path/to/project/venv/bin/gunicorn \
+          --access-logfile - \
+          --worker-class eventlet \
+          --workers 2 \
+          --max-requests 2000 \
+          --bind unix:/run/gunicorn.sock \
+          automin.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

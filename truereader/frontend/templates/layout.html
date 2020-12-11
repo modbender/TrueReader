@@ -1,0 +1,105 @@
+{% load manifest %}
+{% theme_name as theme_style %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% common_seo_tags %} {% block extra_head %}{% endblock extra_head %}{% with theme_style|add:".css" as theme_css %}
+  <link rel="stylesheet" href="{% manifest theme_css %}"/>{% endwith %}
+  <link rel="stylesheet" href="{% manifest 'styles.css' %}"/>
+  {% manifest_match 'node-*.css' '<link rel="stylesheet" href="{match}"/>' %}
+</head>
+
+<body data-theme="{{theme_style}}">
+  <header>
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container">
+        <div class="mx-auto mx-sm-0">
+          <a class="navbar-brand" href="#">Navbar</a>
+        </div>
+
+        <form class="form-inline mx-auto">
+          <div class="input-group">
+            <input class="form-control" type="search" placeholder="Search" aria-label="Search" />
+            <div class="input-group-append">
+              <button class="btn btn-outline-success" type="submit">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div> 
+        </form>
+        <ul class="navbar-nav mx-auto mx-sm-0">
+          <li class="nav-item">
+            <button type="button" class="btn nav-link" id="toggleButton" data-toggle="modal" data-target="#themeModal">
+              <i class="fas fa-tint fa-lg fa-fw"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Dropdown
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Something else here</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+  {% block body %}{% endblock body %}
+
+  <div class="modal fade" id="themeModal" tabindex="-1" aria-labelledby="themeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="themeModalLabel">Change theme</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="{% url 'change_theme' %}" method="post" id="themeForm">
+          <div class="modal-body">
+            <select class="custom-select" name="theme_name" required>
+              <option value="slate">Slate</option>
+              <option value="darkly">Darkly</option>
+              <option value="sandstone">Sandstone</option>
+              <option value="cerulean">Cerulean</option>
+            </select>
+            {% csrf_token %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {% manifest_match '*.js' '<script src="{match}"></script>' %}
+</body>
+
+</html>
